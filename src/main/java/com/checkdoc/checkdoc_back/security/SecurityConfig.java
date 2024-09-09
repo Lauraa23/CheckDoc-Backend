@@ -37,8 +37,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/doctor/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
-            .requestMatchers(HttpMethod.DELETE, "/doctor/deleteDoctorById").authenticated()
-            ).addFilterBefore((Filter) jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+            .requestMatchers(HttpMethod.DELETE, "/doctor/deleteDoctorByEmail").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/user/deleteUserByEmail").authenticated()
+            ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
 

@@ -7,4 +7,5 @@ import com.checkdoc.checkdoc_back.model.UserModel;
 public interface UserRepository extends JpaRepository<UserModel, Long>{
     UserModel findByEmail(String email);
     Long findIdByEmail(String email);
+    void deleteByEmail(String email);
 }

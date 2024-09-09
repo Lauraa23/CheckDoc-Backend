@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,10 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.checkdoc.checkdoc_back.service.jwt.JwtUtils;
 import com.checkdoc.checkdoc_back.service.user.CustomUserDetailsService;
-
 import java.io.IOException;
 
 @Component
@@ -30,7 +27,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        
+        try {
         final String authorizationHeader = request.getHeader("Authorization");
         String jwtToken = getTokenFromRequest(request);
         String username = null;
@@ -51,6 +48,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+        } catch (RuntimeException e) {
+           throw new RuntimeException("Usuario no autenticado");
+        }
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
