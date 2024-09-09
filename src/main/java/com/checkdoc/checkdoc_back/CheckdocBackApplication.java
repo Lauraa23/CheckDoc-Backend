@@ -14,7 +14,7 @@ public class CheckdocBackApplication {
 		System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 		SpringApplication.run(CheckdocBackApplication.class, args);
-		System.out.println("Todo bien!");
+		System.out.println("Ready to handle connections");
 	}
 
 }
