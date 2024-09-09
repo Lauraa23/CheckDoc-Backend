@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.checkdoc.checkdoc_back.model.CustomUserDetails;
 import com.checkdoc.checkdoc_back.model.DoctorDetails;
 import com.checkdoc.checkdoc_back.model.DoctorModel;
