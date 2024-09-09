@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,22 +22,20 @@ public class DoctorModel {
     @Column(name = "specialty", nullable = false)
     private String specialty;
 
+    @Column(name = "bio", nullable = false)
+    private String bio;
+
     @Column(name = "price", nullable = false)
     private Double price;
 
     @Column(name = "patient_count", nullable = false)
     private int patientCount = 0;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false) 
+    private UserModel user;
 
     public DoctorModel() {}
-
-    public DoctorModel(String name, String specialty, Double price) {
-        this.name = name;
-        this.specialty = specialty;
-        this.price = price;
-        this.patientCount = 0;
-    }
-
 
     public Long getId() {
         return id;
@@ -49,6 +49,14 @@ public class DoctorModel {
         return name;
     }
 
+    public UserModel getUser() {
+        return this.user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -59,6 +67,14 @@ public class DoctorModel {
 
     public void setSpecialty(String specialty) {
         this.specialty = specialty;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public Double getPrice() {
