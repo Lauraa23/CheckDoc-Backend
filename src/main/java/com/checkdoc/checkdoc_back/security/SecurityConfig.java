@@ -31,10 +31,12 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf((csrf) -> csrf.ignoringRequestMatchers("/doctor/**"))
+            .csrf((csrf) -> csrf.ignoringRequestMatchers("/**"))
             .authorizeHttpRequests(authRequest -> authRequest
             .requestMatchers(HttpMethod.GET, "/doctor/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/doctor/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
             .requestMatchers(HttpMethod.DELETE, "/doctor/deleteDoctorById").authenticated()
             ).addFilterBefore((Filter) jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
