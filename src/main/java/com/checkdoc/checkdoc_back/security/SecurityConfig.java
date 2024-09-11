@@ -1,5 +1,6 @@
 package com.checkdoc.checkdoc_back.security;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.checkdoc.checkdoc_back.security.jwt.JwtRequestFilter;
-
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -32,6 +34,7 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf((csrf) -> csrf.ignoringRequestMatchers("/**"))
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(authRequest -> authRequest
             .requestMatchers(HttpMethod.GET, "/doctor/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/doctor/**").permitAll()
@@ -39,6 +42,11 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
             .requestMatchers(HttpMethod.DELETE, "/doctor/deleteDoctorByEmail").authenticated()
             .requestMatchers(HttpMethod.DELETE, "/user/deleteUserByEmail").authenticated()
+            .requestMatchers(HttpMethod.POST, "/appointment/create").authenticated()
+            .requestMatchers(HttpMethod.PUT, "/appointment/cancellAppointment").authenticated()
+            .requestMatchers(HttpMethod.PUT, "/appointment/updateAppointment").authenticated()
+            .requestMatchers(HttpMethod.GET, "/appointment/getAppointmentsByDoctorId").authenticated()
+            .requestMatchers(HttpMethod.GET, "/appointment/getAppoinmentByUser").authenticated()
             ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
@@ -53,4 +61,21 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+   @Bean
+
+    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("http://localhost:5173")); 
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setExposedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+}
+
 }
