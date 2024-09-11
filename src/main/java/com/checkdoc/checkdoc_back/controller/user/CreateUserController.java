@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.checkdoc.checkdoc_back.model.UserModel;
+import com.checkdoc.checkdoc_back.model.UserRequest;
 import com.checkdoc.checkdoc_back.service.user.CreateUser;
 
 @RestController
@@ -21,15 +22,13 @@ public class CreateUserController {
 
     @PostMapping("/user/createUser")
     public ResponseEntity<String> createUser(
-        @RequestParam("name") String name,
-        @RequestParam("email") String email,
-        @RequestParam("password") String password) {
+        @RequestBody UserRequest userRequest) {
             try {
-                String encodedPassword = passwordEncoder.encode(password);
+                String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
 
                 UserModel user = new UserModel();
-                user.setName(name);
-                user.setEmail(email);
+                user.setName(userRequest.getName());
+                user.setEmail(userRequest.getEmail());
                 user.setPassword(encodedPassword);
                 user.setRole("patient");
 

@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "appointments")
@@ -20,10 +21,12 @@ public class AppointmentModel {
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
+    @JsonIgnoreProperties({"email", "password", "role"})
     private UserModel patient;
 
     @ManyToOne 
     @JoinColumn(name = "doctor_id", nullable = false)
+    @JsonIgnoreProperties({"specialty", "bio", "price", "patientCount", "user"})
     private DoctorModel doctor;
 
     @Column(name = "appointment_date", nullable = false)

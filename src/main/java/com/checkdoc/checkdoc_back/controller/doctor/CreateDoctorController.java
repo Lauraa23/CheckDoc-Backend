@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.checkdoc.checkdoc_back.model.DoctorModel;
+import com.checkdoc.checkdoc_back.model.DoctorRequest;
 import com.checkdoc.checkdoc_back.model.UserModel;
 import com.checkdoc.checkdoc_back.service.doctor.CreateDoctor;
 
@@ -20,33 +21,27 @@ public class CreateDoctorController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/doctor/createDoctor")
-    public ResponseEntity<String> createDoctor(
-        @RequestParam("name") String name,
-        @RequestParam("email") String email,
-        @RequestParam("password") String password,
-        @RequestParam("specialty") String specialty,
-        @RequestParam("bio") String bio,
-        @RequestParam("price") Double price) {
+    public ResponseEntity<String> createDoctor(@RequestBody DoctorRequest doctorRequest) {
             try {
-            String encodedPassword = passwordEncoder.encode(password);
+            String encodedPassword = passwordEncoder.encode(doctorRequest.getPassword());
 
             UserModel user = new UserModel();
-            user.setName(name);
-            user.setEmail(email);
+            user.setName(doctorRequest.getName());
+            user.setEmail(doctorRequest.getEmail());
             user.setPassword(encodedPassword);
             user.setRole("doctor");
 
             DoctorModel doctor = new DoctorModel();
-            doctor.setName(name);
-            doctor.setSpecialty(specialty);
-            doctor.setBio(bio);
-            doctor.setPrice(price);
+            doctor.setName(doctorRequest.getName());
+            doctor.setSpecialty(doctorRequest.getSpecialty());
+            doctor.setBio(doctorRequest.getBio() != null ? doctorRequest.getBio() : "");
+            doctor.setPrice(doctorRequest.getPrice());
 
             createDoctor.saveDoctor(user, doctor);
             
             return ResponseEntity.ok("Doctor register sucessfully");
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Doctor register failed" + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Doctor register failed " + e.getMessage());
             }
     }
 
